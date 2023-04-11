@@ -3,6 +3,7 @@ import {routeLoader$} from '@builder.io/qwik-city';
 
 import Header from '~/components/header/header';
 import {useAuthSession} from '~/routes/plugin@auth';
+import {AuthUser} from '~/types';
 
 export const useServerTimeLoader = routeLoader$(() => {
     return {
@@ -18,11 +19,11 @@ export default component$(() => {
     const userSignal = useAuthSession();
     const isAuthPathSignal = isAuthPath();
     return (
-        <div class="page">
+        <div class="page bg-base-300 p-3">
             <main>
                 {
                     !isAuthPathSignal.value &&
-                    <Header loggedIn={userSignal.value?.user !== undefined}/>
+                    <Header user={userSignal.value?.user as AuthUser}/>
                 }
                 <Slot/>
             </main>

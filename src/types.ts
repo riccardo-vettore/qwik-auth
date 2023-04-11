@@ -7,3 +7,9 @@ export type AuthProvider = {
     name: string;
     icon: string;
 }
+
+export type AuthUser = {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+}

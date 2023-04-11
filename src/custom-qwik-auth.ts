@@ -64,7 +64,6 @@ export const getCurrentPageForAction = (req: RequestEventCommon) => req.url.href
 export function serverAuthQrl(authOptions: QRL<(ev: RequestEventCommon) => QwikAuthConfig>) {
     const useAuthSignin = globalAction$(
         async ({providerId, callbackUrl: deprecated, options, authorizationParams}, req) => {
-            console.log('useAuthSignin')
             if (deprecated) {
                 console.warn(
                     '\x1b[33mWARNING: callbackUrl is deprecated - use options.callbackUrl instead\x1b[0m'
@@ -149,7 +148,6 @@ export function serverAuthQrl(authOptions: QRL<(ev: RequestEventCommon) => QwikA
 
             const auth = await authOptions(req);
             if (actions.includes(action) && req.url.pathname.startsWith(prefix + '/')) {
-                console.log(action)
                 const res = await Auth(req.request, auth);
                 const cookie = res.headers.get('set-cookie');
                 if (cookie) {

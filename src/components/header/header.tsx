@@ -1,33 +1,86 @@
-import {component$} from '@builder.io/qwik';
+import {$, component$} from '@builder.io/qwik';
 import Navbar from '~/components/navbar/navbar';
-import {Form} from '@builder.io/qwik-city';
+import {Form, useNavigate} from '@builder.io/qwik-city';
 import {Button} from '@qwik-ui/headless';
 import {useAuthSignin, useAuthSignout} from '~/routes/plugin@auth';
+import {AuthUser} from '~/types';
 
 interface HeaderProps {
-    loggedIn: boolean;
+    user: AuthUser;
 }
 
-export default component$(({loggedIn}: HeaderProps) => {
+export default component$(({user}: HeaderProps) => {
     const loginAction = useAuthSignin();
     const signoutAction = useAuthSignout();
+    const navigate = useNavigate();
+
+    const getUserInitials = $((user: AuthUser) => {
+        if (!user.name) return '';
+        return user.name.split(' ').reduce((prev, curr) => {
+            return `${prev} ${curr[0]}`
+        }, '');
+    })
 
     return (
         <Navbar class="bg-base-100 rounded-lg bg-neutral text-neutral-content">
-            <a q:slot="navbar-left" class="btn btn-ghost normal-case text-xl">
-                Qwik Auth
-            </a>
+            <div q:slot="navbar-left">
+                <Button class="btn btn-ghost normal-case text-xl"
+                        onClick$={() => navigate('/')}
+                >
+                    Qwik Auth
+                </Button>
+            </div>
             <div q:slot="navbar-right">
-                <Form action={loggedIn ? signoutAction : loginAction}>
-                    <div>
-                        <input
-                            type="hidden"
-                            name="provider"
-                            value="credentials"
-                        />
-                        <Button class="btn">{loggedIn ? 'Logout' : 'Login'}</Button>
-                    </div>
-                </Form>
+                {
+                    !user ? (
+                        <Form action={loginAction}>
+                            <div>
+                                <input
+                                    type="hidden"
+                                    name="provider"
+                                    value="credentials"
+                                />
+                                <Button class="btn">Login</Button>
+                            </div>
+                        </Form>
+                    ) : (
+                        <div class="dropdown dropdown-end">
+                            <label tabIndex={0} class="btn btn-ghost btn-circle avatar placeholder">
+                                <div class="bg-neutral-focus text-neutral-content rounded-full w-12">
+                                    <span>
+                                        {
+                                            user.image ? (
+                                                <div class="w-10 rounded-full">
+                                                    <img src={user.image}/>
+                                                </div>
+                                            ) : getUserInitials(user)
+                                        }
+                                    </span>
+                                </div>
+                            </label>
+                            <ul tabIndex={0}
+                                class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+                                <li>
+                                    <Button onClick$={() => navigate('/account')}>
+                                        Account
+                                    </Button>
+                                </li>
+                                <li>
+                                    <Form action={signoutAction}>
+                                        <div>
+                                            <input
+                                                type="hidden"
+                                                name="provider"
+                                                value="credentials"
+                                            />
+                                            <Button>Logout</Button>
+                                        </div>
+                                    </Form>
+                                </li>
+                            </ul>
+                        </div>
+                    )
+                }
             </div>
         </Navbar>
     );
