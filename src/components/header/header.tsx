@@ -1,7 +1,6 @@
 import {$, component$} from '@builder.io/qwik';
 import Navbar from '~/components/navbar/navbar';
 import {Form, useNavigate} from '@builder.io/qwik-city';
-import {Button} from '@qwik-ui/headless';
 import {useAuthSignin, useAuthSignout} from '~/routes/plugin@auth';
 import {AuthUser} from '~/types';
 
@@ -24,11 +23,11 @@ export default component$(({user}: HeaderProps) => {
     return (
         <Navbar class="bg-base-100 rounded-lg bg-neutral text-neutral-content">
             <div q:slot="navbar-left">
-                <Button class="btn btn-ghost normal-case text-xl"
+                <button class="btn btn-ghost normal-case text-xl"
                         onClick$={() => navigate('/')}
                 >
                     Qwik Auth
-                </Button>
+                </button>
             </div>
             <div q:slot="navbar-right">
                 {
@@ -40,7 +39,7 @@ export default component$(({user}: HeaderProps) => {
                                     name="provider"
                                     value="credentials"
                                 />
-                                <Button class="btn">Login</Button>
+                                <button class="btn">Login</button>
                             </div>
                         </Form>
                     ) : (
@@ -61,9 +60,9 @@ export default component$(({user}: HeaderProps) => {
                             <ul tabIndex={0}
                                 class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
                                 <li>
-                                    <Button onClick$={() => navigate('/account')}>
+                                    <button onClick$={() => navigate('/account')}>
                                         Account
-                                    </Button>
+                                    </button>
                                 </li>
                                 <li>
                                     <Form action={signoutAction}>
@@ -73,7 +72,7 @@ export default component$(({user}: HeaderProps) => {
                                                 name="provider"
                                                 value="credentials"
                                             />
-                                            <Button>Logout</Button>
+                                            <button>Logout</button>
                                         </div>
                                     </Form>
                                 </li>
