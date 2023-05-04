@@ -3,6 +3,9 @@ import GoogleProvider from '@auth/core/providers/google';
 import {Provider} from '@auth/core/providers';
 import {serverAuth$} from '~/custom-qwik-auth';
 import {ENV_VARIABLES} from '~/env';
+import {PrismaAdapter} from '@next-auth/prisma-adapter';
+import {PrismaClient} from '@prisma/client';
+import {Adapter} from '@auth/core/src/adapters';
 
 export const {useAuthSignin, useAuthSignout, onRequest, getProviders, useAuthSession} = serverAuth$(
     () => {
@@ -12,6 +15,7 @@ export const {useAuthSignin, useAuthSignout, onRequest, getProviders, useAuthSes
             pages: {
                 signIn: '/auth/signin'
             },
+            adapter: PrismaAdapter(new PrismaClient()) as Adapter,
             providers: [
                 GithubProvider({
                     clientId: ENV_VARIABLES.VITE_GITHUB_CLIENT_ID,
